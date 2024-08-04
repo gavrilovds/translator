@@ -1,0 +1,16 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: translator-app
+  datasource:
+    url: jdbc:postgresql://postgres:5432/translator_db
+    username: user
+    password: postgres
+    driver-class-name: org.postgresql.Driver
+translator:
+  parallel-execution:
+    threads: 10
+  google:
+    translator-url: https://translate.googleapis.com/translate_a/single

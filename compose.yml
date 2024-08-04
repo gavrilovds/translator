@@ -1,0 +1,35 @@
+version: "3.8"
+
+services:
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: translator_db
+      POSTGRES_USER: user
+      POSTGRES_PASSWORD: postgres
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
+
+  translator:
+    build: .
+    ports:
+      - "8080:8080"
+    depends_on:
+      - postgres
+
+  flyway:
+    image: flyway/flyway:latest
+    environment:
+      FLYWAY_URL: jdbc:postgresql://postgres:5432/translator_db
+      FLYWAY_USER: user
+      FLYWAY_PASSWORD: postgres
+    volumes:
+      - ./src/main/resources/db/migration:/flyway/sql
+    depends_on:
+      - postgres
+    entrypoint: [ "flyway", "migrate" ]
+
+volumes:
+  postgres_data:
